@@ -15,7 +15,7 @@
 <script type="text/javascript">
 var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 function preload() {
-    game.load.image('sky', 'assets/TRUMP.jpg');
+    game.load.image('Yankees', 'assets/Yankees team.jpg');
     game.load.image('ground', 'assets/platform.png');
     game.load.image('star', 'assets/star.png');
     game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
@@ -31,7 +31,7 @@ function create() {
     //  We're going to be using physics, so enable the Arcade Physics system
     game.physics.startSystem(Phaser.Physics.ARCADE);
     //  A simple background for our game
-    game.add.sprite(0, 0, 'sky').scale.setTo(1,,5);
+    game.add.sprite(0, 0, 'Yankees');
     //  The platforms group contains the ground and the 2 ledges we can jump on
     platforms = game.add.group();
     //  We will enable physics for any object that is created in this group
@@ -56,20 +56,19 @@ function create() {
     game.physics.arcade.enable(enemy);
     //  Player physics properties. Give the little guy a slight bounce.
     enemy.body.bounce.y = 0.2;
-    enemy.body.gravity.y = 300;
+    enemy.body.gravity.y = 80;
     enemy.body.collideWorldBounds = true;
     //  Our two animations, walking left and right.
     enemy.animations.add('left', [0, 1], 10, true);
     enemy.animations.add('right', [2, 3], 10, true);
     
-    enemy.animations.play('right')
-    enemy.body.velocity.x = 150
-    
+    enemy.animations.play("right")
+    enemy.body.velocity.x = 300
     //  We need to enable physics on the player
     game.physics.arcade.enable(player);
     //  Player physics properties. Give the little guy a slight bounce.
     player.body.bounce.y = 0.2;
-    player.body.gravity.y = 300;
+    player.body.gravity.y = 70;
     player.body.collideWorldBounds = true;
     //  Our two animations, walking left and right.
     player.animations.add('left', [0, 1, 2, 3], 10, true);
@@ -79,15 +78,18 @@ function create() {
     //  We will enable physics for any star that is created in this group
     stars.enableBody = true;
     //  Here we'll create 12 of them evenly spaced apart
-    for (var i = 0; i < 1000; i++)
+    for (var i = 0; i < 50; i++)
     {
         //  Create a star inside of the 'stars' group
-        var star = stars.create(i * 10, 0, 'star');
+        var star = stars.create(i * 15, 0, 'star');
         //  Let gravity do its thing
         star.body.gravity.y = 300;
         //  This just gives each star a slightly random bounce value
-        star.body.bounce.y = 0.7 + Math.random() * 0.2;
+        star.body.bounce.y = 0.6 + Math.random() * 0.6;
     }
+    
+    
+     
     //  The score
     scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
     //  Our controls.
@@ -104,31 +106,29 @@ function update() {
     game.physics.arcade.overlap(player, enemy, playerVsEnemy, null, this);
     //  Reset the players velocity (movement)
     player.body.velocity.x = 0;
-    //If statemen - conditional
-    
-    if(enemy.body.position.x > game.width - 40){
-       //Make Pig move back to the left
-       enemy.body.velocity.x = -150;
-       enemy.animations.play('left')
-       
-       }
+    //If statement - conditional
+    if (enemy.body.position.x > game.width - 40) {
+        //Make pig move back to the left
+        enemy.body.velocity.x = -300
+        enemy.animations.play('left')
+    }
     else if (enemy.body.position.x < 0 + 40) {
-        //go right
-        enemy.body.velocity.x = 150;
-        enemy.animations.play('right')
-             
-             }
+             //go right
+        enemy.body.velocity.x = 300
+        enemy.animations.play('right')  
+     }
+    
     
     if (cursors.left.isDown)
     {
         //  Move to the left
-        player.body.velocity.x = -150;
+        player.body.velocity.x = -220;
         player.animations.play('left');
     }
     else if (cursors.right.isDown)
     {
         //  Move to the right
-        player.body.velocity.x = 150;
+        player.body.velocity.x = 220;
         player.animations.play('right');
     }
     else
@@ -149,19 +149,13 @@ function collectStar (player, star) {
     // Removes the star from the screen
     star.kill();
     //  Add and update the score
-    score += 10;
+    score += 50;
     scoreText.text = 'Score: ' + score;
 }
-    
-    function playerVsEnemy(player, enemy) {
-        if(player.body.position.y + 16 < enemy.body.position.y) {
-           enemy.kill()    
-        } else {
-            player.kill()
-            alert('Game Over')
-        }
-    }
-    
+function playerVsEnemy(player, enemy) {
+    player.kill()
+    alert('Game Over')
+}   
 </script>
 
 </body>
